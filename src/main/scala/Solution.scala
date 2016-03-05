@@ -27,19 +27,28 @@ object Solution {
   def main(args: Array[String]): Unit = {
     val homeDirectory = new File(System.getProperty("user.home"))
 
-    // @todo implement constraint
     /*
-    Workshops
-    BoardGames
-    must not end after 11h30
-     */
-    /*
-      BoardGames
-      Workshops
-      LanguageGames
-     can last 5 minutes more
+     @todo implement constraints
+      - BoardGames + Workshops + LanguageGames can last 5 minutes more
+      - Workshops + BoardGames must not end after 11h30
      */
 
+    val MorningArgument = "morning"
+    val AfternoonArgument = "afternoon"
+    val AcceptedArguments = Set(MorningArgument, AfternoonArgument)
+
+    if (args.length == 1 && AcceptedArguments.contains(args.head)) {
+      if (args.head == MorningArgument) {
+        lookForMorningSolution(homeDirectory)
+      } else if (args.head == AfternoonArgument) {
+        lookForAfternoonSolution(homeDirectory)
+      }
+    } else {
+      println(s"Usage: Solution ${AcceptedArguments.toSeq.sorted.mkString("|")}")
+    }
+  }
+
+  def lookForMorningSolution(homeDirectory: File): Unit = {
     val referenceMorningSolution = Solution(
       Candidate.MorningBestManualCandidate,
       PauseInMinutesBetweenActivities,
@@ -56,8 +65,10 @@ object Solution {
       MorningTime,
       new File(homeDirectory, "morning.txt"),
       new File(homeDirectory, "morning.png"))
+  }
 
-    /*val referenceAfternoonSolution = Solution(
+  def lookForAfternoonSolution(homeDirectory: File): Unit = {
+    val referenceAfternoonSolution = Solution(
       Candidate.AfternoonBestManualCandidate,
       PauseInMinutesBetweenActivities,
       AfternoonTime)
@@ -72,7 +83,7 @@ object Solution {
       PauseInMinutesBetweenActivities,
       AfternoonTime,
       new File(homeDirectory, "afternoon.txt"),
-      new File(homeDirectory, "afternoon.png"))*/
+      new File(homeDirectory, "afternoon.png"))
   }
 
   def apply(candidate: Candidate, pauseInMinutesBetweenActivities: Int, startTime: LocalTime): Solution =
