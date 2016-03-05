@@ -4,7 +4,7 @@ import scala.util.Random
 case class Activity(name: String, durationInMinutes: Int, costIfAtSameTime: Int, pause: Boolean = false)
 
 object Activity {
-  val TreasureHunt = Activity(name = "Chasse au trésor", durationInMinutes = 30, costIfAtSameTime = 10)
+  val TreasureHunt = Activity(name = "Chasse au trésor", durationInMinutes = 30, costIfAtSameTime = 100)
   val Workshops = Activity(name = "Ateliers", durationInMinutes = 30, costIfAtSameTime = 1)
   val LanguageGames = Activity(name = "Jeux de langue", durationInMinutes = 30, costIfAtSameTime = 1)
   val BoardGames = Activity(name = "Jeux de société", durationInMinutes = 45, costIfAtSameTime = 1)

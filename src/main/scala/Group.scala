@@ -1,6 +1,6 @@
 case class Group(number: Int, personCount: Int) {
   def name: String =
-    s"Groupe $number"
+    s"Groupe $number ($personCount p.)"
 }
 
 object Group {

@@ -35,14 +35,14 @@ object Solution {
 
     referenceMorningSolution.dumpToFile(new File(homeDirectory, "morning-reference.txt"))
 
-    /*lookForSolution(
+    lookForSolution(
       Group.MorningGroups,
       Activity.Activities,
       PauseInMinutesBetweenActivities,
       MorningTime,
       new File(homeDirectory, "morning.txt"))
 
-    val referenceAfternoonSolution = Solution(
+    /*val referenceAfternoonSolution = Solution(
       Candidate.AfternoonBestManualCandidate,
       PauseInMinutesBetweenActivities,
       AfternoonTime)

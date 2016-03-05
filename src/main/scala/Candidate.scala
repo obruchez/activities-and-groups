@@ -1,9 +1,26 @@
 import org.joda.time.LocalTime
 
 case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
+  // Main cost function
   def cost(pauseInMinutesBetweenActivities: Int): Int = {
-    // @todo
-    0
+    // Insert the pauses between the activities
+    var activitiesWithPauseByGroup =
+      activitiesByGroup.toSeq map { groupAndActivities =>
+        groupAndActivities._1 -> Activity.activitiesWithPause(groupAndActivities._2, pauseInMinutesBetweenActivities)
+      }
+
+    var totalCost = 0
+
+    // Keep looping while at least one group has an activity
+    while (activitiesWithPauseByGroup.exists(_._2.nonEmpty)) {
+      // Compute the cost looking just at the first minute of all groups (i.e. the first activity of all groups)
+      totalCost += costForFirstMinute(activitiesWithPauseByGroup)
+
+      // Skip the first minute of each group, removing finished activities
+      activitiesWithPauseByGroup = activitiesByGroupWithFirstMinuteRemoved(activitiesWithPauseByGroup)
+    }
+
+    totalCost
   }
 
   def asStrings(startTime: LocalTime, pauseInMinutesBetweenActivities: Int): Seq[String] =
@@ -11,6 +28,45 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
       val activitiesWithPause = Activity.activitiesWithPause(activities, pauseInMinutesBetweenActivities)
       s"${group.name}:" +: Activity.asStrings(activitiesWithPause, startTime, withPauses = false).map(" " + _)
     }).flatten
+
+  private def costForFirstMinute(activitiesByGroup: Seq[(Group, Seq[Activity])]): Int = {
+    val concurrentActivities = activitiesByGroup.flatMap(_._2.headOption)
+
+    val activityCounts = concurrentActivities.groupBy(activity => activity).map(kv => kv._1 -> kv._2.size)
+
+    (for ((activity, count) <- activityCounts) yield {
+      assert(count > 0)
+
+      // Number of persons
+      val personCount =
+        (for {
+          (group, groupActivities) <- activitiesByGroup
+          groupActivity <- groupActivities
+          if groupActivity == activity
+        } yield group.personCount).sum
+
+      // The idea here is that if the activity is done by one group only, the cost will be zero ; it will be positive
+      // if several groups are doing the activity at the same time ; it will be more if more people are doing the
+      // activity at the same time
+      activity.costIfAtSameTime * (count - 1) * personCount
+    }).sum
+  }
+
+  private def activitiesByGroupWithFirstMinuteRemoved(activitiesByGroup: Seq[(Group, Seq[Activity])]): Seq[(Group, Seq[Activity])] =
+    for ((group, activities) <- activitiesByGroup) yield group -> activitiesWithFirstMinuteRemoved(activities)
+
+  private def activitiesWithFirstMinuteRemoved(activities: Seq[Activity]): Seq[Activity] = {
+    activities.toList match {
+      case Nil =>
+        Nil
+      case head :: tail if head.durationInMinutes > 0 =>
+        // First activity not tail => remove one minute from the remaining duration
+        head.copy(durationInMinutes = head.durationInMinutes - 1)  :: tail
+      case head :: tail =>
+        // First activity finished => remove it
+        tail
+    }
+  }
 }
 
 object Candidate {
