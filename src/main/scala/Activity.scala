@@ -7,11 +7,11 @@ case class Activity(name: String, durationInMinutes: Int, costIfAtSameTime: Int,
 }
 
 object Activity {
-  val TreasureHunt = Activity(name = "Chasse au trésor", durationInMinutes = 30, costIfAtSameTime = 100)
-  val Workshops = Activity(name = "Ateliers", durationInMinutes = 30, costIfAtSameTime = 1)
+  val TreasureHunt = Activity(name = "Chasse au trésor", durationInMinutes = 30, costIfAtSameTime = 13)
+  val Workshops = Activity(name = "Ateliers", durationInMinutes = 30, costIfAtSameTime = 3)
   val LanguageGames = Activity(name = "Jeux de langue", durationInMinutes = 30, costIfAtSameTime = 1)
   val BoardGames = Activity(name = "Jeux de société", durationInMinutes = 45, costIfAtSameTime = 1)
-  val SkillGames = Activity(name = "Jeux d'adresse", durationInMinutes = 45, costIfAtSameTime = 2)
+  val SkillGames = Activity(name = "Jeux d'adresse", durationInMinutes = 45, costIfAtSameTime = 7)
 
   val Activities = Seq(TreasureHunt, Workshops, LanguageGames, BoardGames, SkillGames)
 
