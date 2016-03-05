@@ -1,7 +1,10 @@
 import org.joda.time.LocalTime
 import scala.util.Random
 
-case class Activity(name: String, durationInMinutes: Int, costIfAtSameTime: Int, pause: Boolean = false)
+case class Activity(name: String, durationInMinutes: Int, costIfAtSameTime: Int, pause: Boolean = false) {
+  def asString(startTime: LocalTime): String =
+    s"${Time.hhmmString(startTime)}-${Time.hhmmString(Time.minutesLater(startTime, durationInMinutes))} $name"
+}
 
 object Activity {
   val TreasureHunt = Activity(name = "Chasse au trésor", durationInMinutes = 30, costIfAtSameTime = 100)
@@ -35,9 +38,8 @@ object Activity {
     var activityStartTime = startTime
 
     (for (activity <- activities) yield {
-      val activityEndTime = Time.minutesLater(activityStartTime, activity.durationInMinutes)
-      val string = s"${Time.hhmmString(activityStartTime)}-${Time.hhmmString(activityEndTime)} ${activity.name}"
-      activityStartTime = activityEndTime
+      val string = activity.asString(activityStartTime)
+      activityStartTime = Time.minutesLater(activityStartTime, activity.durationInMinutes)
       if (!activity.pause || withPauses) Some(string) else None
     }).flatten
   }
