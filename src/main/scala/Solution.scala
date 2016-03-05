@@ -4,8 +4,8 @@ object Solution {
   def main(args: Array[String]): Unit = {
     val pauseInMinutesBetweenActivities = 5
 
-    lookForSolution(Group.firstGroups, Activity.activities, pauseInMinutesBetweenActivities, new LocalTime(8, 10))
-    //lookForSolution(Group.secondGroups, Activity.activities, pauseInMinutesBetweenActivities, new LocalTime(12, 55))
+    lookForSolution(Group.AfternoonGroups, Activity.Activities, pauseInMinutesBetweenActivities, new LocalTime(8, 10))
+    //lookForSolution(Group.MorningGroups, Activity.Activities, pauseInMinutesBetweenActivities, new LocalTime(12, 55))
   }
 
   def lookForSolution(groups: Seq[Group],
