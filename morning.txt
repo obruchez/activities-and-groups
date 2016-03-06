@@ -1,0 +1,49 @@
+Cost: 3214
+Groupe 9 (6 p.):
+ 08:10-08:40 Jeux de langue
+ 08:45-09:15 Ateliers
+ 09:20-10:05 Jeux d'adresse
+ 10:10-10:40 Chasse au trésor
+ 10:45-11:30 Jeux de société
+Groupe 10 (4 p.):
+ 08:10-08:40 Ateliers
+ 08:45-09:30 Jeux d'adresse
+ 09:35-10:05 Chasse au trésor
+ 10:10-10:55 Jeux de société
+ 11:00-11:30 Jeux de langue
+Groupe 11 (5 p.):
+ 08:10-08:40 Ateliers
+ 08:45-09:15 Jeux de langue
+ 09:20-09:50 Chasse au trésor
+ 09:55-10:40 Jeux d'adresse
+ 10:45-11:30 Jeux de société
+Groupe 12 (4 p.):
+ 08:10-08:55 Jeux d'adresse
+ 09:00-09:45 Jeux de société
+ 09:50-10:20 Jeux de langue
+ 10:25-10:55 Chasse au trésor
+ 11:00-11:30 Ateliers
+Groupe 13 (4 p.):
+ 08:10-08:55 Jeux de société
+ 09:00-09:45 Jeux d'adresse
+ 09:50-10:20 Chasse au trésor
+ 10:25-10:55 Jeux de langue
+ 11:00-11:30 Ateliers
+Groupe 14 (5 p.):
+ 08:10-08:40 Chasse au trésor
+ 08:45-09:30 Jeux de société
+ 09:35-10:20 Jeux d'adresse
+ 10:25-10:55 Ateliers
+ 11:00-11:30 Jeux de langue
+Groupe 15 (5 p.):
+ 08:10-08:40 Jeux de langue
+ 08:45-09:15 Chasse au trésor
+ 09:20-10:05 Jeux de société
+ 10:10-10:40 Ateliers
+ 10:45-11:30 Jeux d'adresse
+Groupe 16 (4 p.):
+ 08:10-08:55 Jeux de société
+ 09:00-09:30 Jeux de langue
+ 09:35-10:05 Ateliers
+ 10:10-10:55 Jeux d'adresse
+ 11:00-11:30 Chasse au trésor
