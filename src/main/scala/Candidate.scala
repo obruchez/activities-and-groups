@@ -1,4 +1,5 @@
 import org.joda.time.LocalTime
+import scala.util.Random
 
 case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
   // Main cost function
@@ -21,6 +22,19 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
     }
 
     totalCost
+  }
+
+  def randomMutation: Candidate = {
+    val groupIndexToMutate = Random.nextInt(activitiesByGroup.size)
+
+    val mutatedActivitiesByGroup =
+      for {
+        ((group, activities), groupIndex) <- activitiesByGroup.toSeq.zipWithIndex
+        groupToMutate = groupIndex == groupIndexToMutate
+        newActivities = if (groupToMutate) Random.shuffle(activities) else activities
+      } yield group -> newActivities
+
+    copy(activitiesByGroup = Map(mutatedActivitiesByGroup: _*))
   }
 
   def asStrings(startTime: LocalTime, pauseInMinutesBetweenActivities: Int): Seq[String] =

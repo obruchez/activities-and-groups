@@ -3,6 +3,9 @@ import org.joda.time.LocalTime
 import scala.util._
 
 case class Solution(candidate: Candidate, pauseInMinutesBetweenActivities: Int, cost: Int, startTime: LocalTime) {
+  def randomMutation: Solution =
+    copy(candidate = candidate.randomMutation)
+
   def asStrings: Seq[String] =
     s"Cost: $cost" +: candidate.asStrings(startTime, pauseInMinutesBetweenActivities)
 
@@ -25,7 +28,11 @@ object Solution {
   val AfternoonTime = new LocalTime(12, 55)
 
   def main(args: Array[String]): Unit = {
-    val homeDirectory = new File(System.getProperty("user.home"))
+    val homeDirectory = new File(System.getProperty("user.home"), "ActivitiesAndGroups")
+
+    if (!homeDirectory.exists()) {
+      homeDirectory.mkdirs()
+    }
 
     /*
      @todo implement constraints
@@ -93,6 +100,15 @@ object Solution {
       cost = candidate.cost(pauseInMinutesBetweenActivities),
       startTime = startTime)
 
+  def randomSolution(groups: Seq[Group],
+                     activities: Seq[Activity],
+                     pauseInMinutesBetweenActivities: Int,
+                     startTime: LocalTime): Solution =
+    Solution(
+      Candidate.randomCandidate(groups, activities),
+      pauseInMinutesBetweenActivities,
+      startTime)
+
   def lookForSolution(groups: Seq[Group],
                       activities: Seq[Activity],
                       pauseInMinutesBetweenActivities: Int,
@@ -109,11 +125,41 @@ object Solution {
           startTime = startTime)
       }
 
+    var solutionCount = 0
+    var solutionToCreateByMutationCount = 0
+
+    val startTimeInMs = System.currentTimeMillis
+    var lastStatTimeInMs = startTimeInMs
+
+    val SolutionsToCreateByMutation = 100000
+    val StatFrequencyInMs = 60000
+
     while (true) {
-      val randomSolution = Solution(
-        Candidate.randomCandidate(groups, activities),
-        pauseInMinutesBetweenActivities,
-        startTime)
+      val randomSolution =
+        if (solutionToCreateByMutationCount > 0) {
+          assert(bestSolution.isDefined)
+
+          solutionToCreateByMutationCount -= 1
+
+          // Mutatation from the currently best solution
+          bestSolution.get.randomMutation
+        } else {
+          // Completely random solution
+          this.randomSolution(groups, activities, pauseInMinutesBetweenActivities, startTime)
+        }
+
+      solutionCount += 1
+
+      // Statistics
+      val currentTimeInMs = System.currentTimeMillis
+      if (currentTimeInMs - lastStatTimeInMs > StatFrequencyInMs) {
+        val timeSinceStartInSeconds = (currentTimeInMs - startTimeInMs).toDouble / 1000.0
+        val solutionsPerSecond = solutionCount.toDouble / timeSinceStartInSeconds
+
+        println(s"Solution count: $solutionCount ($solutionsPerSecond sol./sec)")
+
+        lastStatTimeInMs = currentTimeInMs
+      }
 
       val betterSolution = bestSolution.map(randomSolution.cost < _.cost).getOrElse(true)
 
@@ -121,6 +167,11 @@ object Solution {
         bestSolution = Some(randomSolution)
         randomSolution.dumpToFile(bestSolutionFile).get
         Image.saveImage(randomSolution, bestSolutionImageFile).get
+
+        // Spend some time mutating the currently best solution
+        solutionToCreateByMutationCount = SolutionsToCreateByMutation
+
+        println(s"New better solution (cost = ${randomSolution.cost})")
       }
     }
   }
