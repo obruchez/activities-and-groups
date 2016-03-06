@@ -141,6 +141,10 @@ object Solution {
 
           solutionToCreateByMutationCount -= 1
 
+          if (solutionToCreateByMutationCount == 0) {
+            println("Back to random solutions mode")
+          }
+
           // Mutatation from the currently best solution
           bestSolution.get.randomMutation
         } else {

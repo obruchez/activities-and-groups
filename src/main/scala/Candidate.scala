@@ -25,14 +25,20 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
   }
 
   def randomMutation: Candidate = {
-    val groupIndexToMutate = Random.nextInt(activitiesByGroup.size)
+    var mutatedActivitiesByGroup = activitiesByGroup.toSeq
 
-    val mutatedActivitiesByGroup =
-      for {
-        ((group, activities), groupIndex) <- activitiesByGroup.toSeq.zipWithIndex
-        groupToMutate = groupIndex == groupIndexToMutate
-        newActivities = if (groupToMutate) Random.shuffle(activities) else activities
-      } yield group -> newActivities
+    val mutationCount = Random.nextInt(activitiesByGroup.size) + 1
+
+    for (_ <- 1 to mutationCount) {
+      val groupIndexToMutate = Random.nextInt(activitiesByGroup.size)
+
+      mutatedActivitiesByGroup =
+          for {
+            ((group, activities), groupIndex) <- mutatedActivitiesByGroup.zipWithIndex
+            groupToMutate = groupIndex == groupIndexToMutate
+            newActivities = if (groupToMutate) Random.shuffle(activities) else activities
+          } yield group -> newActivities
+    }
 
     copy(activitiesByGroup = Map(mutatedActivitiesByGroup: _*))
   }
