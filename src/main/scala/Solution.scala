@@ -131,7 +131,7 @@ object Solution {
     val startTimeInMs = System.currentTimeMillis
     var lastStatTimeInMs = startTimeInMs
 
-    val SolutionsToCreateByMutation = 100000
+    val SolutionsToCreateByMutation = 1000000
     val StatFrequencyInMs = 60000
 
     while (true) {
