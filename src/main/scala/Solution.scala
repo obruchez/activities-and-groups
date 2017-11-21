@@ -10,8 +10,7 @@ case class Solution(candidate: Candidate,
     copy(candidate = candidate.randomMutation)
 
   def asStrings: Seq[String] =
-    s"Cost: $cost" +: candidate.asStrings(startTime,
-                                          pauseInMinutesBetweenActivities)
+    s"Cost: $cost" +: candidate.asStrings(startTime, pauseInMinutesBetweenActivities)
 
   def dumpToFile(file: File): Try[Unit] = Try {
     val string = asStrings.mkString("\n")
@@ -56,23 +55,18 @@ object Solution {
         lookForAfternoonSolution(homeDirectory)
       }
     } else {
-      println(
-        s"Usage: Solution ${AcceptedArguments.toSeq.sorted.mkString("|")}")
+      println(s"Usage: Solution ${AcceptedArguments.toSeq.sorted.mkString("|")}")
     }
   }
 
   def lookForMorningSolution(homeDirectory: File): Unit = {
-    val referenceMorningSolution = Solution(
-      Candidate.MorningBestManualCandidate,
-      PauseInMinutesBetweenActivities,
-      MorningTime)
+    val referenceMorningSolution =
+      Solution(Candidate.MorningBestManualCandidate, PauseInMinutesBetweenActivities, MorningTime)
 
-    referenceMorningSolution.dumpToFile(
-      new File(homeDirectory, "morning-reference.txt"))
+    referenceMorningSolution.dumpToFile(new File(homeDirectory, "morning-reference.txt"))
 
     Image
-      .saveImage(referenceMorningSolution,
-                 new File(homeDirectory, "morning-reference.png"))
+      .saveImage(referenceMorningSolution, new File(homeDirectory, "morning-reference.png"))
       .get
 
     lookForSolution(
@@ -86,17 +80,14 @@ object Solution {
   }
 
   def lookForAfternoonSolution(homeDirectory: File): Unit = {
-    val referenceAfternoonSolution = Solution(
-      Candidate.AfternoonBestManualCandidate,
-      PauseInMinutesBetweenActivities,
-      AfternoonTime)
+    val referenceAfternoonSolution = Solution(Candidate.AfternoonBestManualCandidate,
+                                              PauseInMinutesBetweenActivities,
+                                              AfternoonTime)
 
-    referenceAfternoonSolution.dumpToFile(
-      new File(homeDirectory, "afternoon-reference.txt"))
+    referenceAfternoonSolution.dumpToFile(new File(homeDirectory, "afternoon-reference.txt"))
 
     Image
-      .saveImage(referenceAfternoonSolution,
-                 new File(homeDirectory, "afternoon-reference.png"))
+      .saveImage(referenceAfternoonSolution, new File(homeDirectory, "afternoon-reference.png"))
       .get
 
     lookForSolution(
@@ -138,8 +129,7 @@ object Solution {
     var bestSolution: Option[Solution] =
       costFromFile(bestSolutionFile).toOption map { cost =>
         Solution(candidate = Candidate(activitiesByGroup = Map()),
-                 pauseInMinutesBetweenActivities =
-                   pauseInMinutesBetweenActivities,
+                 pauseInMinutesBetweenActivities = pauseInMinutesBetweenActivities,
                  cost = cost,
                  startTime = startTime)
       }
@@ -168,10 +158,7 @@ object Solution {
           bestSolution.get.randomMutation
         } else {
           // Completely random solution
-          this.randomSolution(groups,
-                              activities,
-                              pauseInMinutesBetweenActivities,
-                              startTime)
+          this.randomSolution(groups, activities, pauseInMinutesBetweenActivities, startTime)
         }
 
       solutionCount += 1
@@ -182,8 +169,7 @@ object Solution {
         val timeSinceStartInSeconds = (currentTimeInMs - startTimeInMs).toDouble / 1000.0
         val solutionsPerSecond = solutionCount.toDouble / timeSinceStartInSeconds
 
-        println(
-          s"Solution count: $solutionCount ($solutionsPerSecond sol./sec)")
+        println(s"Solution count: $solutionCount ($solutionsPerSecond sol./sec)")
 
         lastStatTimeInMs = currentTimeInMs
       }

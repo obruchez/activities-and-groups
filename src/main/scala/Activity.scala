@@ -11,20 +11,16 @@ case class Activity(name: String,
 }
 
 object Activity {
-  val TreasureHunt = Activity(name = "Chasse au trésor",
-                              durationInMinutes = 30,
-                              costIfAtSameTime = 13)
+  val TreasureHunt =
+    Activity(name = "Chasse au trésor", durationInMinutes = 30, costIfAtSameTime = 13)
   val Workshops =
     Activity(name = "Ateliers", durationInMinutes = 30, costIfAtSameTime = 3)
-  val LanguageGames = Activity(name = "Jeux de langue",
-                               durationInMinutes = 30,
-                               costIfAtSameTime = 1)
-  val BoardGames = Activity(name = "Jeux de société",
-                            durationInMinutes = 45,
-                            costIfAtSameTime = 1)
-  val SkillGames = Activity(name = "Jeux d'adresse",
-                            durationInMinutes = 45,
-                            costIfAtSameTime = 7)
+  val LanguageGames =
+    Activity(name = "Jeux de langue", durationInMinutes = 30, costIfAtSameTime = 1)
+  val BoardGames =
+    Activity(name = "Jeux de société", durationInMinutes = 45, costIfAtSameTime = 1)
+  val SkillGames =
+    Activity(name = "Jeux d'adresse", durationInMinutes = 45, costIfAtSameTime = 7)
 
   val Activities =
     Seq(TreasureHunt, Workshops, LanguageGames, BoardGames, SkillGames)
@@ -32,12 +28,10 @@ object Activity {
   def randomOrder(activities: Seq[Activity]): Seq[Activity] =
     Random.shuffle(activities)
 
-  def activitiesWithPause(
-      activities: Seq[Activity],
-      pauseInMinutesBetweenActivities: Int): Seq[Activity] = {
+  def activitiesWithPause(activities: Seq[Activity],
+                          pauseInMinutesBetweenActivities: Int): Seq[Activity] = {
     val pauseActivity = Activity(name = "Pause",
-                                 durationInMinutes =
-                                   pauseInMinutesBetweenActivities,
+                                 durationInMinutes = pauseInMinutesBetweenActivities,
                                  costIfAtSameTime = 0,
                                  pause = true)
 
@@ -58,8 +52,7 @@ object Activity {
 
     (for (activity <- activities) yield {
       val string = activity.asString(activityStartTime)
-      activityStartTime =
-        Time.minutesLater(activityStartTime, activity.durationInMinutes)
+      activityStartTime = Time.minutesLater(activityStartTime, activity.durationInMinutes)
       if (!activity.pause || withPauses) Some(string) else None
     }).flatten
   }

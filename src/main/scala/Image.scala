@@ -22,16 +22,14 @@ object Image {
       minY = (bufferedImage.getHeight.toDouble / groupCount * groupIndex).round.toInt
       maxY = (bufferedImage.getHeight.toDouble / groupCount * (groupIndex + 1)).round.toInt
     } {
-      drawGroup(
-        g,
-        minX,
-        maxX,
-        minY,
-        maxY,
-        solution.startTime,
-        group,
-        Activity.activitiesWithPause(activities,
-                                     solution.pauseInMinutesBetweenActivities))
+      drawGroup(g,
+                minX,
+                maxX,
+                minY,
+                maxY,
+                solution.startTime,
+                group,
+                Activity.activitiesWithPause(activities, solution.pauseInMinutesBetweenActivities))
     }
 
     ImageIO.write(bufferedImage, "png", file)
@@ -71,10 +69,9 @@ object Image {
       if (!activity.pause) {
         g.setColor(Color.BLACK)
         g.setFont(bigFont)
-        g.drawString(
-          activity.asString(Time.minutesLater(startTime, startInMinutes)),
-          activityFromX + 10,
-          (minY + maxY) / 2)
+        g.drawString(activity.asString(Time.minutesLater(startTime, startInMinutes)),
+                     activityFromX + 10,
+                     (minY + maxY) / 2)
       }
 
       startInMinutes = endInMinutes
