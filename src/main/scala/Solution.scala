@@ -1,13 +1,17 @@
-import java.io.{ File, PrintWriter }
+import java.io.{File, PrintWriter}
 import org.joda.time.LocalTime
 import scala.util._
 
-case class Solution(candidate: Candidate, pauseInMinutesBetweenActivities: Int, cost: Int, startTime: LocalTime) {
+case class Solution(candidate: Candidate,
+                    pauseInMinutesBetweenActivities: Int,
+                    cost: Int,
+                    startTime: LocalTime) {
   def randomMutation: Solution =
     copy(candidate = candidate.randomMutation)
 
   def asStrings: Seq[String] =
-    s"Cost: $cost" +: candidate.asStrings(startTime, pauseInMinutesBetweenActivities)
+    s"Cost: $cost" +: candidate.asStrings(startTime,
+                                          pauseInMinutesBetweenActivities)
 
   def dumpToFile(file: File): Try[Unit] = Try {
     val string = asStrings.mkString("\n")
@@ -28,7 +32,8 @@ object Solution {
   val AfternoonTime = new LocalTime(12, 55)
 
   def main(args: Array[String]): Unit = {
-    val homeDirectory = new File(System.getProperty("user.home"), "ActivitiesAndGroups")
+    val homeDirectory =
+      new File(System.getProperty("user.home"), "ActivitiesAndGroups")
 
     if (!homeDirectory.exists()) {
       homeDirectory.mkdirs()
@@ -51,7 +56,8 @@ object Solution {
         lookForAfternoonSolution(homeDirectory)
       }
     } else {
-      println(s"Usage: Solution ${AcceptedArguments.toSeq.sorted.mkString("|")}")
+      println(
+        s"Usage: Solution ${AcceptedArguments.toSeq.sorted.mkString("|")}")
     }
   }
 
@@ -61,9 +67,13 @@ object Solution {
       PauseInMinutesBetweenActivities,
       MorningTime)
 
-    referenceMorningSolution.dumpToFile(new File(homeDirectory, "morning-reference.txt"))
+    referenceMorningSolution.dumpToFile(
+      new File(homeDirectory, "morning-reference.txt"))
 
-    Image.saveImage(referenceMorningSolution, new File(homeDirectory, "morning-reference.png")).get
+    Image
+      .saveImage(referenceMorningSolution,
+                 new File(homeDirectory, "morning-reference.png"))
+      .get
 
     lookForSolution(
       Group.MorningGroups,
@@ -71,7 +81,8 @@ object Solution {
       PauseInMinutesBetweenActivities,
       MorningTime,
       new File(homeDirectory, "morning.txt"),
-      new File(homeDirectory, "morning.png"))
+      new File(homeDirectory, "morning.png")
+    )
   }
 
   def lookForAfternoonSolution(homeDirectory: File): Unit = {
@@ -80,9 +91,13 @@ object Solution {
       PauseInMinutesBetweenActivities,
       AfternoonTime)
 
-    referenceAfternoonSolution.dumpToFile(new File(homeDirectory, "afternoon-reference.txt"))
+    referenceAfternoonSolution.dumpToFile(
+      new File(homeDirectory, "afternoon-reference.txt"))
 
-    Image.saveImage(referenceAfternoonSolution, new File(homeDirectory, "afternoon-reference.png")).get
+    Image
+      .saveImage(referenceAfternoonSolution,
+                 new File(homeDirectory, "afternoon-reference.png"))
+      .get
 
     lookForSolution(
       Group.AfternoonGroups,
@@ -90,25 +105,29 @@ object Solution {
       PauseInMinutesBetweenActivities,
       AfternoonTime,
       new File(homeDirectory, "afternoon.txt"),
-      new File(homeDirectory, "afternoon.png"))
+      new File(homeDirectory, "afternoon.png")
+    )
   }
 
-  def apply(candidate: Candidate, pauseInMinutesBetweenActivities: Int, startTime: LocalTime): Solution =
+  def apply(candidate: Candidate,
+            pauseInMinutesBetweenActivities: Int,
+            startTime: LocalTime): Solution =
     Solution(
       candidate = candidate,
       pauseInMinutesBetweenActivities = pauseInMinutesBetweenActivities,
       cost = candidate.cost(pauseInMinutesBetweenActivities),
-      startTime = startTime)
+      startTime = startTime
+    )
 
   def randomSolution(groups: Seq[Group],
                      activities: Seq[Activity],
                      pauseInMinutesBetweenActivities: Int,
                      startTime: LocalTime): Solution =
-    Solution(
-      Candidate.randomCandidate(groups, activities),
-      pauseInMinutesBetweenActivities,
-      startTime)
+    Solution(Candidate.randomCandidate(groups, activities),
+             pauseInMinutesBetweenActivities,
+             startTime)
 
+  // scalastyle:off method.length
   def lookForSolution(groups: Seq[Group],
                       activities: Seq[Activity],
                       pauseInMinutesBetweenActivities: Int,
@@ -118,11 +137,11 @@ object Solution {
     // Retrieve best cost from file
     var bestSolution: Option[Solution] =
       costFromFile(bestSolutionFile).toOption map { cost =>
-        Solution(
-          candidate = Candidate(activitiesByGroup = Map()),
-          pauseInMinutesBetweenActivities = pauseInMinutesBetweenActivities,
-          cost = cost,
-          startTime = startTime)
+        Solution(candidate = Candidate(activitiesByGroup = Map()),
+                 pauseInMinutesBetweenActivities =
+                   pauseInMinutesBetweenActivities,
+                 cost = cost,
+                 startTime = startTime)
       }
 
     var solutionCount = 0
@@ -149,7 +168,10 @@ object Solution {
           bestSolution.get.randomMutation
         } else {
           // Completely random solution
-          this.randomSolution(groups, activities, pauseInMinutesBetweenActivities, startTime)
+          this.randomSolution(groups,
+                              activities,
+                              pauseInMinutesBetweenActivities,
+                              startTime)
         }
 
       solutionCount += 1
@@ -160,12 +182,14 @@ object Solution {
         val timeSinceStartInSeconds = (currentTimeInMs - startTimeInMs).toDouble / 1000.0
         val solutionsPerSecond = solutionCount.toDouble / timeSinceStartInSeconds
 
-        println(s"Solution count: $solutionCount ($solutionsPerSecond sol./sec)")
+        println(
+          s"Solution count: $solutionCount ($solutionsPerSecond sol./sec)")
 
         lastStatTimeInMs = currentTimeInMs
       }
 
-      val betterSolution = bestSolution.map(randomSolution.cost < _.cost).getOrElse(true)
+      val betterSolution =
+        bestSolution.map(randomSolution.cost < _.cost).getOrElse(true)
 
       if (betterSolution) {
         bestSolution = Some(randomSolution)
@@ -179,6 +203,7 @@ object Solution {
       }
     }
   }
+  // scalastyle:on method.length
 
   private def costFromFile(file: File): Try[Int] = Try {
     (for {
