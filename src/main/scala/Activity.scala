@@ -1,13 +1,14 @@
 import org.joda.time.LocalTime
 import scala.util.Random
 
-case class Activity(name: String,
-                    durationInMinutes: Int,
-                    costIfAtSameTime: Int,
-                    pause: Boolean = false) {
+case class Activity(
+    name: String,
+    durationInMinutes: Int,
+    costIfAtSameTime: Int,
+    pause: Boolean = false
+) {
   def asString(startTime: LocalTime): String =
-    s"${Time.hhmmString(startTime)}-${Time.hhmmString(
-      Time.minutesLater(startTime, durationInMinutes))} $name"
+    s"${Time.hhmmString(startTime)}-${Time.hhmmString(Time.minutesLater(startTime, durationInMinutes))} $name"
 }
 
 object Activity {
@@ -28,26 +29,33 @@ object Activity {
   def randomOrder(activities: Seq[Activity]): Seq[Activity] =
     Random.shuffle(activities)
 
-  def activitiesWithPause(activities: Seq[Activity],
-                          pauseInMinutesBetweenActivities: Int): Seq[Activity] = {
-    val pauseActivity = Activity(name = "Pause",
-                                 durationInMinutes = pauseInMinutesBetweenActivities,
-                                 costIfAtSameTime = 0,
-                                 pause = true)
+  def activitiesWithPause(
+      activities: Seq[Activity],
+      pauseInMinutesBetweenActivities: Int
+  ): Seq[Activity] = {
+    val pauseActivity = Activity(
+      name = "Pause",
+      durationInMinutes = pauseInMinutesBetweenActivities,
+      costIfAtSameTime = 0,
+      pause = true
+    )
 
     val lastActivityIndex = activities.size - 1
 
     for {
       (activity, index) <- activities.zipWithIndex
       lastActivity = index == lastActivityIndex
-      activityWithPause <- if (lastActivity) Seq(activity)
-      else Seq(activity, pauseActivity)
+      activityWithPause <-
+        if (lastActivity) Seq(activity)
+        else Seq(activity, pauseActivity)
     } yield activityWithPause
   }
 
-  def asStrings(activities: Seq[Activity],
-                startTime: LocalTime,
-                withPauses: Boolean): Seq[String] = {
+  def asStrings(
+      activities: Seq[Activity],
+      startTime: LocalTime,
+      withPauses: Boolean
+  ): Seq[String] = {
     var activityStartTime = startTime
 
     (for (activity <- activities) yield {

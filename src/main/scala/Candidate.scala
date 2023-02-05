@@ -7,8 +7,10 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
     // Insert the pauses between the activities
     var activitiesWithPauseByGroup =
       activitiesByGroup.toSeq map { groupAndActivities =>
-        groupAndActivities._1 -> Activity.activitiesWithPause(groupAndActivities._2,
-                                                              pauseInMinutesBetweenActivities)
+        groupAndActivities._1 -> Activity.activitiesWithPause(
+          groupAndActivities._2,
+          pauseInMinutesBetweenActivities
+        )
       }
 
     var totalCost = 0
@@ -20,7 +22,8 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
 
       // Skip the first minute of each group, removing finished activities
       activitiesWithPauseByGroup = activitiesByGroupWithFirstMinuteRemoved(
-        activitiesWithPauseByGroup)
+        activitiesWithPauseByGroup
+      )
     }
 
     totalCost
@@ -37,8 +40,9 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
       mutatedActivitiesByGroup = for {
         ((group, activities), groupIndex) <- mutatedActivitiesByGroup.zipWithIndex
         groupToMutate = groupIndex == groupIndexToMutate
-        newActivities = if (groupToMutate) Random.shuffle(activities)
-        else activities
+        newActivities =
+          if (groupToMutate) Random.shuffle(activities)
+          else activities
       } yield group -> newActivities
     }
 
@@ -81,7 +85,8 @@ case class Candidate(activitiesByGroup: Map[Group, Seq[Activity]]) {
   }
 
   private def activitiesByGroupWithFirstMinuteRemoved(
-      activitiesByGroup: Seq[(Group, Seq[Activity])]): Seq[(Group, Seq[Activity])] =
+      activitiesByGroup: Seq[(Group, Seq[Activity])]
+  ): Seq[(Group, Seq[Activity])] =
     for ((group, activities) <- activitiesByGroup)
       yield group -> activitiesWithFirstMinuteRemoved(activities)
 
@@ -118,7 +123,9 @@ object Candidate {
           group(14) -> Seq(LanguageGames, TreasureHunt, BoardGames, SkillGames, Workshops),
           group(15) -> Seq(Workshops, SkillGames, LanguageGames, TreasureHunt, BoardGames),
           group(16) -> Seq(TreasureHunt, LanguageGames, SkillGames, BoardGames, Workshops)
-        ): _*))
+        ): _*
+      )
+    )
 
   val AfternoonBestManualCandidate =
     Candidate(
@@ -132,5 +139,7 @@ object Candidate {
           group(6) -> Seq(Workshops, SkillGames, LanguageGames, TreasureHunt, BoardGames),
           group(7) -> Seq(TreasureHunt, LanguageGames, SkillGames, BoardGames, Workshops),
           group(8) -> Seq(SkillGames, Workshops, LanguageGames, TreasureHunt, BoardGames)
-        ): _*))
+        ): _*
+      )
+    )
 }
