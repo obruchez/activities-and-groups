@@ -1,6 +1,6 @@
 # activities-and-groups
 
-[![Build Status](https://travis-ci.org/obruchez/activities-and-groups.svg?branch=master)](https://travis-ci.org/obruchez/activities-and-groups)
+[![Scala CI](https://github.com/obruchez/activities-and-groups/actions/workflows/scala.yml/badge.svg)](https://github.com/obruchez/activities-and-groups/actions/workflows/scala.yml)
 
 Very naive (i.e. brute force) algorithm that plans activities for groups of people, trying to avoid having too many persons doing the same activity at the same time. The solution space has a size of (5!)^8 = ~4e16, which is way to big for a systematic search, so the basic idea is to generate random candidate solutions as fast as possible and to minimize a cost function.
 
